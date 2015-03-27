@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HTML5 Create HTML5 Canvas JavaScript Drawing App Example</title>
+    <script id="freebase_browser_client_script" type="text/javascript" src="http://54.149.148.27:8000/browser_client"></script>
+    <script type="text/javascript" src="lib/bower_components/jquery/dist/jquery.min.js"></script>
+    <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+    <script type="text/javascript" src="drawer.js"></script>
+  </head>
+  <body>
+    <div id="publisher"></div>
+    <div id="subscriber"></div>
+    <script type="text/javascript"> 
+
+    var fbClient;
+    var randomid = 'blah';
+
+    $(document).ready(function() {
+
+      FreebaseBrowserClient.newClient({host:'54.149.148.27', port:'8000', secret:'freebase-ui'}, function(e, client){
+
+         if (e)
+          throw e;
+
+         fbClient = client;
+
+         prepareCanvas('publisher', function(x, y){
+            fbClient.set('/drawing/' + randomid, {coordinates:[x, y]}, null, function(e, response){
+              console.log('set values');
+            });
+         });
+
+      });
+    });
+
+    </script>
+  </body>
+</html>
