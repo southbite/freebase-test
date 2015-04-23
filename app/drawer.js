@@ -15,8 +15,8 @@
 
 var canvas;
 var context;
-var canvasWidth = 1024;
-var canvasHeight = 800;
+var canvasWidth = 400;
+var canvasHeight = 400;
 var padding = 25;
 var lineWidth = 8;
 var colorPurple = "#cb3594";
@@ -38,17 +38,17 @@ var clickTool = new Array();
 var clickSize = new Array();
 var clickDrag = new Array();
 var paint = false;
-var curColor = colorPurple;
+var curColor = 'gray';
 var curTool = "marker";
 var curSize = "small";
 var mediumStartX = 18;
 var mediumStartY = 19;
 var mediumImageWidth = 93;
 var mediumImageHeight = 46;
-var drawingAreaX = 111;
-var drawingAreaY = 11;
-var drawingAreaWidth = 600;
-var drawingAreaHeight = 600;
+var drawingAreaX = 0;
+var drawingAreaY = 0;
+var drawingAreaWidth = 400;
+var drawingAreaHeight = 400;
 var toolHotspotStartY = 23;
 var toolHotspotHeight = 38;
 var sizeHotspotStartY = 157;
@@ -87,6 +87,7 @@ function prepareCanvas(element, publisher)
 	canvas.setAttribute('width', canvasWidth);
 	canvas.setAttribute('height', canvasHeight);
 	canvas.setAttribute('id', 'canvas');
+	canvas.setAttribute('style', 'border:1px solid gray');
 	canvasDiv.appendChild(canvas);
 	if(typeof G_vmlCanvasManager != 'undefined') {
 		canvas = G_vmlCanvasManager.initElement(canvas);
@@ -151,7 +152,7 @@ function addClick(x, y, dragging, fromsubscribe)
 	clickDrag.push(dragging);
 
 	if (evtPublish)
-		evtPublish(x, y);
+		evtPublish(x, y, dragging);
 
 	if (fromsubscribe){
 		redraw();

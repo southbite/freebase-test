@@ -2,36 +2,52 @@
 <html>
   <head>
     <title>HTML5 Create HTML5 Canvas JavaScript Drawing App Example</title>
-    <script id="freebase_browser_client_script" type="text/javascript" src="http://54.149.148.27:8000/browser_client"></script>
     <script type="text/javascript" src="lib/bower_components/jquery/dist/jquery.min.js"></script>
     <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
     <script type="text/javascript" src="drawer.js"></script>
   </head>
   <body>
-    <div id="reader"></div>
+    <div id="reader"><span id="counter" style="position:absolute;top:10px;left:10px;font-size:22px;color:gray;font-family:arial"></span></div>
     <script type="text/javascript"> 
 
       var fbClient;
       var randomid = 'blah';
+      var counter = 0;
+      var freebase_config = {host:'54.149.148.27', port:'8000', secret:'freebase-ui'};
+      //var freebase_config = {host:'localhost', port:'8000', secret:'freebase-ui'};
+
+      $.ajaxSetup({
+        cache: true
+      });
 
       $(document).ready(function() {
+         $.getScript('http://' + freebase_config.host + ":" + freebase_config.port + '/browser_client', function( data, textStatus, jqxhr ) {
 
-        FreebaseBrowserClient.newClient({host:'54.149.148.27', port:'8000', secret:'freebase-ui'}, function(e, client){
+          console.log('gt');
+          console.log([data, textStatus, jqxhr]);
 
-           if (e)
-            throw e;
+          if (textStatus != 'success')
+            throw "Failed to load the freebase client library: " + textStatus;
+          else{
+            FreebaseClient.load(freebase_config, function(e, client){
 
-           fbClient = client;
-           prepareCanvas('reader');
+               if (e)
+                throw e;
 
-           fbClient.on('/drawing/' + randomid, 'PUT', 0, function(e, message){
+               fbClient = client;
+               prepareCanvas('reader');
+
+               fbClient.on('/drawing/' + randomid, 'PUT', 0, function(e, message){
   
-              if (!e){
-                addClick(message.data.coordinates[0], message.data.coordinates[1], true, true);
-              }
+                  if (!e){
+                    addClick(message.data.coordinates[0], message.data.coordinates[1], message.data.dragging, true);
+                    counter++;
+                    $('#counter').html(counter);
+                  }
 
-           });
-
+               });
+            });
+          }
         });
       });
     </script>
