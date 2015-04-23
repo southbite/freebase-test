@@ -13,15 +13,16 @@
       var fbClient;
       var randomid = 'blah';
       var counter = 0;
-      var freebase_config = {host:'54.149.148.27', port:'8000', secret:'freebase-ui'};
-      //var freebase_config = {host:'localhost', port:'8000', secret:'freebase-ui'};
+
+      var freebase_config = {config:{host:'54.149.148.27', port:'8000', secret:'freebase'}};
+      //var freebase_config = {config:{host:'localhost', port:'8000', secret:'freebase'}};
 
       $.ajaxSetup({
         cache: true
       });
 
       $(document).ready(function() {
-         $.getScript('http://' + freebase_config.host + ":" + freebase_config.port + '/browser_client', function( data, textStatus, jqxhr ) {
+         $.getScript('http://' + freebase_config.config.host + ":" + freebase_config.config.port + '/browser_client', function( data, textStatus, jqxhr ) {
 
           console.log('gt');
           console.log([data, textStatus, jqxhr]);
