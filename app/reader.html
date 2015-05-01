@@ -10,12 +10,14 @@
     <div id="reader"><span id="counter" style="position:absolute;top:10px;left:10px;font-size:22px;color:gray;font-family:arial"></span></div>
     <script type="text/javascript"> 
 
+      console.log('in reader setup');
+
       var fbClient;
       var randomid = 'blah';
       var counter = 0;
 
-      var freebase_config = {config:{host:'54.149.148.27', port:'8000', secret:'freebase'}};
-      //var freebase_config = {config:{host:'localhost', port:'8000', secret:'freebase'}};
+      //var freebase_config = {config:{host:'54.149.148.27', port:'8000', secret:'freebase'}};
+      var freebase_config = {config:{host:'localhost', port:'8000', secret:'freebase'}};
 
       $.ajaxSetup({
         cache: true
@@ -30,24 +32,20 @@
           if (textStatus != 'success')
             throw "Failed to load the freebase client library: " + textStatus;
           else{
-            FreebaseClient.load(freebase_config, function(e, client){
+            var fbClient = new FreebaseClient(freebase_config, function(e){
 
-               if (e)
-                throw e;
+             if (e)
+              throw e;
 
-               fbClient = client;
-               prepareCanvas('reader');
-
-               fbClient.on('/drawing/' + randomid, 'PUT', 0, function(e, message){
-  
-                  if (!e){
-                    addClick(message.data.coordinates[0], message.data.coordinates[1], message.data.dragging, true);
-                    counter++;
-                    $('#counter').html(counter);
-                  }
-
-               });
+            prepareCanvas('reader');
+            //fbClient.set('/drawing/' + randomid, {coordinates:[x, y],"dragging":dragging}, {noStore:true}, function(e, response){
+            fbClient.on('/drawing/' + randomid, 'set', 0, function(e, message){
+              addClick(message.data.coordinates[0],message.data.coordinates[1], message.data.dragging, true);
+            }, function(e){
+              console.log('the on was registered');
             });
+
+          });
           }
         });
       });

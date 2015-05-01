@@ -14,8 +14,8 @@
     var randomid = 'blah';
     var counter = 0;
 
-    var freebase_config = {config:{host:'54.149.148.27', port:'8000', secret:'freebase'}};
-    //var freebase_config = {config:{host:'localhost', port:'8000', secret:'freebase'}};
+    //var freebase_config = {config:{host:'54.149.148.27', port:'8000', secret:'freebase'}};
+    var freebase_config = {config:{host:'localhost', port:'8000', secret:'freebase'}};
 
     $.ajaxSetup({
       cache: true
@@ -30,14 +30,13 @@
           throw "Failed to load the freebase client library: " + textStatus;
         else{
            console.log('loading fb...');
-          FreebaseClient.load(freebase_config, function(e, client){
+          var fbClient = new FreebaseClient(freebase_config, function(e){
 
              if (e)
               throw e;
-
-             fbClient = client;
+            
              prepareCanvas('publisher', function(x, y, dragging){
-                fbClient.set('/drawing/' + randomid, {coordinates:[x, y],"dragging":dragging}, null, function(e, response){
+                fbClient.set('/drawing/' + randomid, {coordinates:[x, y],"dragging":dragging}, {noStore:true}, function(e, response){
                   if (!e){
                     counter++;
                     $('#counter').html(counter);
